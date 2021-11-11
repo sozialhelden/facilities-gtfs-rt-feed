@@ -1,6 +1,6 @@
 # facilities-gtfs-rt-feed
 
-**Generate a [GTFS Realtime (GTFS-RT)](https://developers.google.com/transit/gtfs-realtime/) feed with the [status of Berlin & Brandenburg elevators](https://brokenlifts.org)** using `EntitySelector`, as proposed in [google/transit#268](https://github.com/google/transit/issues/268) & [MobilityData/transit#42](https://github.com/MobilityData/transit/pull/42).
+**Generate a [GTFS Realtime (GTFS-RT)](https://developers.google.com/transit/gtfs-realtime/) feed with the [status of Berlin & Brandenburg elevators](https://brokenlifts.org)** using `StationUpdate`, as proposed in [google/transit#268](https://github.com/google/transit/issues/268) & [MobilityData/transit#42](https://github.com/MobilityData/transit/pull/42).
 
 ![MIT-licensed](https://img.shields.io/github/license/derhuerst/facilities-gtfs-rt-feed.svg)
 ![minimum Node.js version](https://img.shields.io/node/v/facilities-gtfs-rt-feed.svg)

@@ -15,11 +15,15 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v2
+      with:
+        submodules: true
     - name: setup Node v${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm install
+
+    - run: npm run build
 
     - run: npm run lint
     - run : npm test

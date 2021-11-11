@@ -1,0 +1,4 @@
+[submodule "mobilitydata-transit"]
+	path = mobilitydata-transit
+	url = https://github.com/MobilityData/transit.git
+	branch = rt-pathway-updates

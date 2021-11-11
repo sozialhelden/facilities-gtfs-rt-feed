@@ -9,3 +9,5 @@ pnpm-debug.log
 /package-lock.json
 /yarn.lock
 /shrinkwrap.yaml
+
+/lib/gtfs-rt-stationupdate-draft.pbf.cjs
