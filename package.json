@@ -1,0 +1,39 @@
+{
+	"private": true,
+	"name": "facilities-gtfs-rt-feed",
+	"description": "Generate a GTFS-Realtime feed with the status of Berlin & Brandenburg elevators.",
+	"version": "1.0.0",
+	"type": "module",
+	"main": "index.js",
+	"keywords": [
+		"gtfs",
+		"gtfs-realtime",
+		"gtfs-rt",
+		"elevators",
+		"accessibility",
+		"public transport",
+		"transit",
+		"berlin",
+		"Brandenburg"
+	],
+	"author": "Jannis R <mail@jannisr.de>",
+	"homepage": "https://github.com/derhuerst/facilities-gtfs-rt-feed",
+	"repository": "derhuerst/facilities-gtfs-rt-feed",
+	"bugs": "https://github.com/derhuerst/facilities-gtfs-rt-feed/issues",
+	"license": "MIT",
+	"engines": {
+		"node": ">=16"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"pino": "^7.2.0"
+	},
+	"devDependencies": {
+		"eslint": "^8.0.0"
+	},
+	"scripts": {
+		"start": "node index.js",
+		"lint": "eslint .",
+		"test": "node test/index.js"
+	}
+}
