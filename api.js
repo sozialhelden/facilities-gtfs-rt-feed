@@ -5,6 +5,10 @@ import express from 'express'
 import {createServeBufferCompressed} from './lib/serve-buffer-compressed.js'
 import {encodeFeed as encodeGtfsRtFeed} from './lib/gtfs-rt-encoding.js'
 import {formatAsPathwayUpdates} from './lib/pathway-updates-encoding.js'
+import {
+	formatAsPathwayEvolutions,
+	encodeCsv as encodePathwayEvolutions,
+} from './lib/pathway-evolutions-encoding.js'
 import {facilitiesSource} from './lib/facilities.js'
 import {mergeFeedEntitiesWithForeignFeed} from './lib/merge-with-foreign-feed.js'
 import {logger} from './lib/logger.js'
@@ -26,6 +30,23 @@ facilitiesSource.on('data', (facilities) => {
 		feedSize: gtfsRtFeed.length,
 	}, 'generated unmerged GTFS-RT feed')
 })
+
+const {
+	setBuffer: setPathwayEvolutions,
+	serveBufferCompressed: servePathwayEvolutions,
+} = createServeBufferCompressed({
+	// https://datatracker.ietf.org/doc/html/rfc4180#section-3
+	contentType: 'text/csv',
+})
+
+facilitiesSource.on('data', (facilities) => {
+	const pathwayEvolutions = formatAsPathwayEvolutions(facilities)
+	const pathwayEvolutionsFile = encodePathwayEvolutions(pathwayEvolutions)
+	setPathwayEvolutions(pathwayEvolutionsFile)
+	logger.debug({
+		nrOfPathwayEvolutions: pathwayEvolutions.length,
+		fileSize: pathwayEvolutionsFile.length,
+	}, 'generated pathway_evolutions.txt')
 })
 
 export const api = express()
@@ -58,3 +79,7 @@ api.use('/feed', async (req, res, next) => {
 })
 
 api.use('/feed', serveGtfsRtFeed)
+
+// todo: serve extended calendar.txt/calendar_dates.txt file
+api.use('/pathway_evolutions.txt', servePathwayEvolutions)
+api.use('/pathway_evolutions.csv', servePathwayEvolutions)
