@@ -2,39 +2,30 @@
 
 import createCors from 'cors'
 import express from 'express'
-import {createServeFeed} from './lib/serve-feed.js'
-import {encodeFeed, StationUpdate} from './lib/encoding.js'
+import {createServeBufferCompressed} from './lib/serve-buffer-compressed.js'
+import {encodeFeed as encodeGtfsRtFeed} from './lib/gtfs-rt-encoding.js'
+import {formatAsPathwayUpdates} from './lib/pathway-updates-encoding.js'
 import {facilitiesSource} from './lib/facilities.js'
 import {mergeFeedEntitiesWithForeignFeed} from './lib/merge-with-foreign-feed.js'
 import {logger} from './lib/logger.js'
 
-const {setFeed, serveFeed} = createServeFeed()
+const {
+	setBuffer: setGtfsRtFeed,
+	serveBufferCompressed: serveGtfsRtFeed,
+} = createServeBufferCompressed()
 
-const {OPERATIONAL, CLOSED} = StationUpdate.PathwayStatus
-
-let entities = []
-let feed = encodeFeed(entities)
-setFeed(feed)
+let pathwayUpdates = []
+let gtfsRtFeed = encodeGtfsRtFeed(pathwayUpdates)
+setGtfsRtFeed(gtfsRtFeed)
 facilitiesSource.on('data', (facilities) => {
-	entities = facilities.map((fa, i) => ({
-		id: `e${i}`,
-		station_update: {
-			pathway: [{
-				pathway_id: fa.properties.pathwayId,
-			}],
-			status: fa.properties.isWorking ? OPERATIONAL : CLOSED,
-			// todo: alert_id
-			// todo: direction
-			// todo: elevator metadata as pbf extension
-		},
-	}))
-	feed = encodeFeed(entities)
-	setFeed(feed)
-
+	pathwayUpdates = formatAsPathwayUpdates(facilities)
+	gtfsRtFeed = encodeGtfsRtFeed(pathwayUpdates)
+	setGtfsRtFeed(gtfsRtFeed)
 	logger.debug({
 		nrOfFacilities: facilities.length,
-		feedSize: feed.length,
-	}, 'updated unmerged feed')
+		feedSize: gtfsRtFeed.length,
+	}, 'generated unmerged GTFS-RT feed')
+})
 })
 
 export const api = express()
@@ -47,20 +38,23 @@ api.use('/feed', async (req, res, next) => {
 	const feedUrl = req.query['mergedWith']
 	if (!feedUrl) return next('route')
 
-	const mergedEntities = await mergeFeedEntitiesWithForeignFeed(entities, feedUrl)
-	const mergedFeed = encodeFeed(mergedEntities)
+	const mergedEntities = await mergeFeedEntitiesWithForeignFeed(pathwayUpdates, feedUrl)
+	const mergedFeed = encodeGtfsRtFeed(mergedEntities)
 	logger.debug({
 		feedUrl,
 		nrOfEntities: mergedEntities.length,
 		feedSize: mergedFeed.length,
-	}, 'merged with foreign feed')
+	}, 'merged with foreign GTFS-RT feed')
 
 	// This is ugly but sufficient for our mergedWith prototype.
-	const {setFeed, serveFeed} = createServeFeed()
+	const {
+		setBuffer: setFeed,
+		serveBufferCompressed: serveFeed,
+	} = createServeBufferCompressed()
 	setFeed(mergedFeed)
 	serveFeed(req, res, (err) => {
 		if (err) next(err)
 	})
 })
 
-api.use('/feed', serveFeed)
+api.use('/feed', serveGtfsRtFeed)
