@@ -12,6 +12,7 @@ import {
 import {facilitiesSource} from './lib/facilities.js'
 import {mergeFeedEntitiesWithForeignFeed} from './lib/merge-with-foreign-feed.js'
 import {logger} from './lib/logger.js'
+import {handleMetricsRequest} from './lib/metrics.js'
 
 const {
 	setBuffer: setGtfsRtFeed,
@@ -83,3 +84,5 @@ api.use('/feed', serveGtfsRtFeed)
 // todo: serve extended calendar.txt/calendar_dates.txt file
 api.use('/pathway_evolutions.txt', servePathwayEvolutions)
 api.use('/pathway_evolutions.csv', servePathwayEvolutions)
+
+api.use('/metrics', handleMetricsRequest)
