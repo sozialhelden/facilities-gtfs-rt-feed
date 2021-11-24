@@ -1,4 +1,6 @@
 .git
 /node_modules
 
+/.env
+
 /lib/gtfs-rt-stationupdate-draft.pbf.cjs

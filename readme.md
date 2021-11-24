@@ -8,15 +8,21 @@
 [![chat with me on Twitter](https://img.shields.io/badge/chat%20with%20me-on%20Twitter-1da1f2.svg)](https://twitter.com/derhuerst)
 
 
-## Installation
+## Running via Docker
 
 ```shell
-npm install derhuerst/facilities-gtfs-rt-feed
+echo 'NODE_ENV=production' >>.env
+echo 'ACCESSIBILITY_CLOUD_TOKEN=…' >>.env
+docker run --env-file=.env -p 3000:3000 ghcr.io/derhuerst/facilities-gtfs-rt-feed
 ```
 
-
-## Usage
+## Running manually
 
 ```shell
-# todo
+git clone https://github.com/derhuerst/facilities-gtfs-rt-feed.git
+cd facilities-gtfs-rt-feed
+npm install
+npm run build
+export 'ACCESSIBILITY_CLOUD_TOKEN=…'
+node index.js | pino-pretty
 ```
