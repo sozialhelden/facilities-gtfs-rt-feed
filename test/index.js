@@ -5,6 +5,7 @@ import {api} from '../api.js'
 import {
 	stopPolling,
 	facilitiesSource,
+	parseAccessibilityCloudResponse,
 } from '../lib/facilities.js'
 
 import {createRequire} from 'module'
@@ -112,13 +113,7 @@ a040a0270321000`, 'hex')
 	{
 		const fetchedAt = Date.parse('2021-11-23T15:16+01:00')
 		const lastModified = new Date(fetchedAt).toUTCString()
-		// todo: use the parsing logic from lib/facilities.js
-		const facilities = facilities20211123.features.map((fa) => ({
-			id: fa.properties._id,
-			pathwayId: fa.properties._id,
-			isWorking: fa.properties.isWorking,
-			lastUpdatedAt: fa.properties.lastUpdate && Date.parse(fa.properties.lastUpdate) / 1000 | 0,
-		}))
+		const facilities = parseAccessibilityCloudResponse(facilities20211123)
 		facilitiesSource.emit('data', facilities, fetchedAt)
 
 		// these have been approved by manual inspection of the body
