@@ -44,6 +44,6 @@
 		"lint": "eslint .",
 		"build-gtfs-rt-draft": "pbjs mobilitydata-transit/gtfs-realtime/proto/gtfs-realtime.proto -t static-module -w commonjs --keep-case --force-number -o lib/gtfs-rt-stationupdate-draft.pbf.cjs",
 		"build": "npm run build-gtfs-rt-draft",
-		"test": "node test/index.js"
+		"test": "env ACCESSIBILITY_CLOUD_TOKEN=foo node test/index.js"
 	}
 }
