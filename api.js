@@ -82,7 +82,9 @@ api.use('/feed', async (req, res, next) => {
 api.use('/feed', serveGtfsRtFeed)
 
 // todo: serve extended calendar.txt/calendar_dates.txt file
-api.use('/pathway_evolutions.txt', servePathwayEvolutions)
+api.use('/pathway_evolutions.txt', (req, res) => {
+	res.redirect(301, '/pathway_evolutions.csv')
+})
 api.use('/pathway_evolutions.csv', servePathwayEvolutions)
 
 api.use('/metrics', handleMetricsRequest)
