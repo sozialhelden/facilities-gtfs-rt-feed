@@ -22,10 +22,10 @@ const {
 let pathwayUpdates = []
 let gtfsRtFeed = encodeGtfsRtFeed(pathwayUpdates)
 setGtfsRtFeed(gtfsRtFeed)
-facilitiesSource.on('data', (facilities) => {
+facilitiesSource.on('data', (facilities, fetchedAt) => {
 	pathwayUpdates = formatAsPathwayUpdates(facilities)
-	gtfsRtFeed = encodeGtfsRtFeed(pathwayUpdates)
-	setGtfsRtFeed(gtfsRtFeed)
+	gtfsRtFeed = encodeGtfsRtFeed(pathwayUpdates, fetchedAt)
+	setGtfsRtFeed(gtfsRtFeed, fetchedAt)
 	logger.debug({
 		nrOfFacilities: facilities.length,
 		feedSize: gtfsRtFeed.length,
@@ -40,10 +40,10 @@ const {
 	contentType: 'text/csv',
 })
 
-facilitiesSource.on('data', (facilities) => {
+facilitiesSource.on('data', (facilities, fetchedAt) => {
 	const pathwayEvolutions = formatAsPathwayEvolutions(facilities)
 	const pathwayEvolutionsFile = encodePathwayEvolutions(pathwayEvolutions)
-	setPathwayEvolutions(pathwayEvolutionsFile)
+	setPathwayEvolutions(pathwayEvolutionsFile, fetchedAt)
 	logger.debug({
 		nrOfPathwayEvolutions: pathwayEvolutions.length,
 		fileSize: pathwayEvolutionsFile.length,
