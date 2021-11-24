@@ -4,6 +4,12 @@ import {createServer, get} from 'http'
 import {api} from '../api.js'
 import {facilitiesSource, stopPolling} from '../lib/facilities.js'
 
+import {createRequire} from 'module'
+const require = createRequire(import.meta.url)
+// Node.js currently only allows importing JSON files with --experimental-json-modules,
+// so we use require() here.
+const facilities20211123 = require('./accessibility-cloud-facilities-2021-11-23T15:16+01.json')
+
 // don't try to poll the actual data source
 stopPolling()
 
@@ -97,6 +103,39 @@ a040a0270321000`, 'hex')
 			const {res, body} = await pGet(baseUrl + '/pathway_evolutions.csv')
 			assertBasicHeaders(res, 'GET /pathway_evolutions.csv')
 			sEqual(body.toString(), pathwayEvolutionsBody.toString(), 'GET /pathway_evolutions.csv: body should be equal')
+		}
+	}
+
+	{
+		const fetchedAt = Date.parse('2021-11-23T15:16+01:00')
+		const lastModified = new Date(fetchedAt).toUTCString()
+		// todo: use the parsing logic from lib/facilities.js
+		const facilities = facilities20211123.features.map((fa) => ({
+			id: fa.properties._id,
+			pathwayId: fa.properties._id,
+			isWorking: fa.properties.isWorking,
+			lastUpdatedAt: fa.properties.lastUpdate && Date.parse(fa.properties.lastUpdate) / 1000 | 0,
+		}))
+		facilitiesSource.emit('data', facilities, fetchedAt)
+
+		// these have been approved by manual inspection of the body
+		const gtfsRtEtag = '"8089-WRowZ9uV2SUqkZx4D7I+LxzoKzw"'
+		const pathwayEvolutionsEtag = '"6daa-1kP2q81PajGDHBip3OEX/7TOm58"'
+
+		{
+			const {res} = await pGet(baseUrl + '/feed', {
+				method: 'HEAD',
+			})
+			assertBasicHeaders(res, '2021-11-23 facilities – HEAD /feed')
+			sEqual(res.headers['etag'], gtfsRtEtag, '2021-11-23 facilities – HEAD /feed: invalid "etag" header')
+		}
+
+		{
+			const {res, body} = await pGet(baseUrl + '/pathway_evolutions.csv', {
+				method: 'HEAD',
+			})
+			assertBasicHeaders(res, '2021-11-23 facilities – HEAD /pathway_evolutions.csv')
+			sEqual(res.headers['etag'], pathwayEvolutionsEtag, '2021-11-23 facilities – HEAD /feed: invalid "etag" header')
 		}
 	}
 
