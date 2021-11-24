@@ -2,7 +2,10 @@ import computeEtag from 'etag'
 import {strictEqual as sEqual} from 'assert'
 import {createServer, get} from 'http'
 import {api} from '../api.js'
-import {facilitiesSource, stopPolling} from '../lib/facilities.js'
+import {
+	stopPolling,
+	facilitiesSource,
+} from '../lib/facilities.js'
 
 import {createRequire} from 'module'
 const require = createRequire(import.meta.url)
