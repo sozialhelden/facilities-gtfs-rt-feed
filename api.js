@@ -7,7 +7,7 @@ import {encodeFeed as encodeGtfsRtFeed} from './lib/gtfs-rt-encoding.js'
 import {formatAsPathwayUpdates} from './lib/pathway-updates-encoding.js'
 import {
 	formatAsPathwayEvolutions,
-	encodeCsv as encodePathwayEvolutions,
+	encodePathwayEvolutionsCsv,
 } from './lib/pathway-evolutions-encoding.js'
 import {facilitiesSource} from './lib/facilities.js'
 import {mergeFeedEntitiesWithForeignFeed} from './lib/merge-with-foreign-feed.js'
@@ -41,11 +41,11 @@ const {
 })
 
 facilitiesSource.on('data', (facilities, fetchedAt) => {
-	const pathwayEvolutions = formatAsPathwayEvolutions(facilities)
-	const pathwayEvolutionsFile = encodePathwayEvolutions(pathwayEvolutions)
+	const pathway_evolutions = formatAsPathwayEvolutions(facilities)
+	const pathwayEvolutionsFile = encodePathwayEvolutionsCsv(pathway_evolutions)
 	setPathwayEvolutions(pathwayEvolutionsFile, fetchedAt)
 	logger.debug({
-		nrOfPathwayEvolutions: pathwayEvolutions.length,
+		nrOfRows: pathway_evolutions.length,
 		fileSize: pathwayEvolutionsFile.length,
 	}, 'generated pathway_evolutions.txt')
 })
