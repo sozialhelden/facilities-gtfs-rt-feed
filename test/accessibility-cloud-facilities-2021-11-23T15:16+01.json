@@ -1692,6 +1692,8 @@
 				"category": "elevator",
 				"sourceImportId": "kqKqJghmdwKAWs6gR",
 				"isWorking": false,
+				"notWorkingSince": "2022-01-25T20:00:00.000Z",
+				"notWorkingUntil": "2022-01-25T20:00:00.000Z",
 				"description": "Fahrtrichtung Fuldaer Str. und Vingst",
 				"lastUpdate": "2021-11-23T14:00:02.778Z",
 				"disruptionSourceImportId": "EeZdmDvLa8L4cumcu",
