@@ -37,13 +37,15 @@
 	},
 	"devDependencies": {
 		"eslint": "^8.0.0",
-		"pino-pretty": "^7.2.0"
+		"pino-pretty": "^7.2.0",
+		"print-gtfs-rt-cli": "^2.1.0"
 	},
 	"scripts": {
 		"start": "node index.js",
 		"lint": "eslint .",
 		"build-gtfs-rt-draft": "pbjs mobilitydata-transit/gtfs-realtime/proto/gtfs-realtime.proto -t static-module -w commonjs --keep-case --force-number -o lib/gtfs-rt-stationupdate-draft.pbf.cjs",
 		"build": "npm run build-gtfs-rt-draft",
-		"test": "env ACCESSIBILITY_CLOUD_TOKEN=foo node test/index.js"
+		"test": "env ACCESSIBILITY_CLOUD_TOKEN=foo node test/index.js",
+		"debug-feed": "curl 'http://localhost:3000/feed' -s | print-gtfs-rt --gtfs-rt-bindings lib/gtfs-rt-stationupdate-draft.pbf.cjs"
 	}
 }
