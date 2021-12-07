@@ -33,6 +33,7 @@
 		"pino": "^7.2.0",
 		"prom-client": "^14.0.1",
 		"protobufjs": "^6.11.2",
+		"quick-lru": "^6.0.2",
 		"serve-buffer": "^3.0.3"
 	},
 	"devDependencies": {
@@ -45,7 +46,7 @@
 		"lint": "eslint .",
 		"build-gtfs-rt-draft": "pbjs mobilitydata-transit/gtfs-realtime/proto/gtfs-realtime.proto -t static-module -w commonjs --keep-case --force-number -o lib/gtfs-rt-stationupdate-draft.pbf.cjs",
 		"build": "npm run build-gtfs-rt-draft",
-		"test": "env ACCESSIBILITY_CLOUD_TOKEN=foo node test/index.js",
+		"test": "env ACCESSIBILITY_CLOUD_TOKEN=foo SERVICE_IDS_PREFIX=bar node test/index.js",
 		"debug-feed": "curl 'http://localhost:3000/feed' -s | print-gtfs-rt --gtfs-rt-bindings lib/gtfs-rt-stationupdate-draft.pbf.cjs"
 	}
 }

@@ -75,6 +75,11 @@ a040a0270321000`, 'hex')
 `, 'utf8')
 		const pathwayEvolutionsEtag = computeEtag(pathwayEvolutionsBody)
 
+		const calendarDatesBody = Buffer.from(`\
+"service_id","date","exception_type"
+`, 'utf8')
+		const calendarDatesEtag = computeEtag(calendarDatesBody)
+
 		{
 			const {res, body} = await pGet(baseUrl + '/feed', {
 				method: 'HEAD',
@@ -108,6 +113,23 @@ a040a0270321000`, 'hex')
 			assertBasicHeaders(res, 'GET /pathway_evolutions.csv')
 			sEqual(body.toString(), pathwayEvolutionsBody.toString(), 'GET /pathway_evolutions.csv: body should be equal')
 		}
+
+		{
+			const {res, body} = await pGet(baseUrl + '/calendar_dates.csv', {
+				method: 'HEAD',
+			})
+			assertBasicHeaders(res, 'HEAD /calendar_dates.csv')
+			sEqual(res.headers['content-type'], 'text/csv', 'HEAD /calendar_dates.csv: invalid "content-type" header')
+			sEqual(res.headers['last-modified'], lastModified, 'HEAD /calendar_dates.csv: invalid "last-modified" header')
+			sEqual(res.headers['etag'], calendarDatesEtag, 'HEAD /calendar_dates.csv: invalid "etag" header')
+			sEqual(res.headers['content-length'], calendarDatesBody.length + '', 'HEAD /calendar_dates.csv: invalid "content-length" header')
+			sEqual(body.toString(), '', 'HEAD /calendar_dates.csv: buffer should be empty')
+		}
+		{
+			const {res, body} = await pGet(baseUrl + '/calendar_dates.csv')
+			assertBasicHeaders(res, 'GET /calendar_dates.csv')
+			sEqual(body.toString(), calendarDatesBody.toString(), 'GET /calendar_dates.csv: body should be equal')
+		}
 	}
 
 	{
@@ -116,9 +138,10 @@ a040a0270321000`, 'hex')
 		const facilities = parseAccessibilityCloudResponse(facilities20211123)
 		facilitiesSource.emit('data', facilities, fetchedAt)
 
-		// these have been approved by manual inspection of the body
+		// these have been approved by manual inspection of the bodies
 		const gtfsRtEtag = '"8089-WRowZ9uV2SUqkZx4D7I+LxzoKzw"'
-		const pathwayEvolutionsEtag = '"6daa-1kP2q81PajGDHBip3OEX/7TOm58"'
+		const pathwayEvolutionsEtag = '"6dc1-+9dghC8h1NojRoNOvtHzJSXv3jk"'
+		const calendarDatesEtag = '"4c-CFmCuS1XYLWywY0Ct1cTF+G1CGc"'
 
 		{
 			const {res} = await pGet(baseUrl + '/feed', {
@@ -133,7 +156,15 @@ a040a0270321000`, 'hex')
 				method: 'HEAD',
 			})
 			assertBasicHeaders(res, '2021-11-23 facilities – HEAD /pathway_evolutions.csv')
-			sEqual(res.headers['etag'], pathwayEvolutionsEtag, '2021-11-23 facilities – HEAD /feed: invalid "etag" header')
+			sEqual(res.headers['etag'], pathwayEvolutionsEtag, '2021-11-23 facilities – HEAD /pathway_evolutions.csv: invalid "etag" header')
+		}
+
+		{
+			const {res, body} = await pGet(baseUrl + '/calendar_dates.csv', {
+				method: 'HEAD',
+			})
+			assertBasicHeaders(res, '2021-11-23 facilities – HEAD /calendar_dates.csv')
+			sEqual(res.headers['etag'], calendarDatesEtag, '2021-11-23 facilities – HEAD /calendar_dates.csv: invalid "etag" header')
 		}
 	}
 
