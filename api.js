@@ -88,3 +88,9 @@ api.use('/pathway_evolutions.txt', (req, res) => {
 api.use('/pathway_evolutions.csv', servePathwayEvolutions)
 
 api.use('/metrics', handleMetricsRequest)
+
+api.use((err, req, res, next) => {
+	if (err.code === 'ERR_STREAM_PREMATURE_CLOSE') return;
+	logger.error(err)
+	next(err)
+})
