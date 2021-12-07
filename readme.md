@@ -8,7 +8,11 @@
 [![chat with me on Twitter](https://img.shields.io/badge/chat%20with%20me-on%20Twitter-1da1f2.svg)](https://twitter.com/derhuerst)
 
 
-## Running via Docker
+## Running
+
+`facilities-gtfs-rt-feed` needs a token to query the [`accessibility.cloud`](https://accessibility.cloud) API; Log into their platform to obtain one.
+
+### Running via Docker
 
 ```shell
 echo 'NODE_ENV=production' >>.env
@@ -16,7 +20,7 @@ echo 'ACCESSIBILITY_CLOUD_TOKEN=…' >>.env
 docker run --env-file=.env -p 3000:3000 ghcr.io/derhuerst/facilities-gtfs-rt-feed
 ```
 
-## Running manually
+### Running manually
 
 ```shell
 git clone https://github.com/derhuerst/facilities-gtfs-rt-feed.git
