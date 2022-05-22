@@ -39,7 +39,7 @@
 	"devDependencies": {
 		"eslint": "^8.0.0",
 		"pino-pretty": "^7.2.0",
-		"print-gtfs-rt-cli": "^2.1.0"
+		"print-gtfs-rt-cli": "^3.0.0"
 	},
 	"scripts": {
 		"start": "node index.js",
